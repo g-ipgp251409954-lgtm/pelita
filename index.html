@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kembara Kuih Tepung Pelita</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- Google Fonts (Fredoka & Plus Jakarta Sans) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f2f8f4;
+            background-image: radial-gradient(#d1fae5 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+        }
+        .font-fredoka {
+            font-family: 'Fredoka', cursive;
+        }
+
+        /* Bouncy Cute Mascot Animation */
+        @keyframes mascotBounce {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-16px) rotate(2deg); }
+        }
+        .animate-mascot {
+            animation: mascotBounce 3s ease-in-out infinite;
+        }
+
+        /* Hand Wave Animation */
+        @keyframes waveHand {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(18deg); }
+        }
+        .animate-wave {
+            animation: waveHand 1.2s ease-in-out infinite;
+            transform-origin: bottom left;
+        }
+
+        /* Floating Animation for Shapes */
+        @keyframes shapeFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-shape-float {
+            animation: shapeFloat 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col justify-between selection:bg-emerald-500 selection:text-white">
+
+    <!-- HEADER BAR -->
+    <header class="bg-emerald-800 text-white shadow-md sticky top-0 z-30 border-b-4 border-emerald-950">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <span class="text-2xl">🍃</span>
+                <h1 class="font-fredoka text-xl sm:text-2xl font-bold tracking-wide text-emerald-100">Kembara Kuih Pelita</h1>
+            </div>
+            <div id="progressBadge" class="hidden flex items-center bg-emerald-950/70 px-3.5 py-1.5 rounded-full border border-emerald-600/50 shadow-inner">
+                <i class="fa-solid fa-microphone text-amber-400 mr-2 text-sm"></i>
+                <span id="progressText" class="text-xs sm:text-sm font-bold tracking-wider text-emerald-100">Soalan Dibaca: 0/5</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow flex flex-col justify-center">
+
+        <!-- ================= SCREEN 1: LANDING SCREEN ================= -->
+        <section id="welcomeScreen" class="flex flex-col items-center justify-center text-center py-6 sm:py-10">
+            <!-- Animated Mascot Vector -->
+            <div class="relative w-64 h-64 sm:w-72 sm:h-72 mb-6 animate-mascot cursor-pointer group" onclick="triggerTinyConfetti()">
+                <!-- Speech Bubble -->
+                <div class="absolute -top-4 right-0 bg-white text-emerald-900 font-bold font-fredoka text-sm sm:text-base px-4 py-2 rounded-2xl shadow-xl border-2 border-emerald-400 z-10 animate-bounce">
+                    Hai! Jom kaji Kuih Pelita bersama! 👋
+                </div>
+
+                <!-- Cute Kuih Pelita Mascot (SVG Vector) -->
+                <svg viewBox="0 0 300 300" class="w-full h-full drop-shadow-2xl">
+                    <!-- Leaf Boat (Sampan Daun Pisang) -->
+                    <path d="M 20 180 C 40 250, 260 250, 280 180 C 290 220, 250 270, 150 270 C 50 270, 10 220, 20 180 Z" fill="#2d5a27" />
+                    <path d="M 25 175 C 60 240, 240 240, 275 175 C 265 210, 220 255, 150 255 C 80 255, 35 210, 25 175 Z" fill="#387031" />
+                    <!-- Leaf Ribs Texture -->
+                    <path d="M 35 180 Q 150 260 265 180" stroke="#1e3f1b" stroke-width="3" fill="none" opacity="0.4"/>
+                    <path d="M 40 200 Q 150 265 260 200" stroke="#4a8e42" stroke-width="2" fill="none" opacity="0.6"/>
+
+                    <!-- Green Pandan Layer -->
+                    <path d="M 40 170 Q 150 185 260 170 L 255 195 Q 150 215 45 195 Z" fill="#40916c" />
+
+                    <!-- White Santan Layer (Mascot Body) -->
+                    <rect x="45" y="100" width="210" height="75" rx="20" fill="#f8fafc" />
+                    <path d="M 45 110 Q 150 90 255 110 Q 150 120 45 110 Z" fill="#ffffff" />
+
+                    <!-- Cute Eyes -->
+                    <circle cx="110" cy="135" r="12" fill="#1e293b" />
+                    <circle cx="114" cy="131" r="4" fill="#ffffff" />
+                    <circle cx="190" cy="135" r="12" fill="#1e293b" />
+                    <circle cx="194" cy="131" r="4" fill="#ffffff" />
+
+                    <!-- Rosy Cheeks -->
+                    <ellipse cx="90" cy="148" rx="10" ry="6" fill="#f43f5e" opacity="0.35" />
+                    <ellipse cx="210" cy="148" rx="10" ry="6" fill="#f43f5e" opacity="0.35" />
+
+                    <!-- Smile -->
+                    <path d="M 135 145 Q 150 162 165 145" stroke="#1e293b" stroke-width="4" stroke-linecap="round" fill="none" />
+
+                    <!-- Pandan Leaf Hair Accessory -->
+                    <path d="M 150 95 C 130 60, 150 40, 155 40 C 160 40, 175 60, 150 95 Z" fill="#2d5a27" />
+                    <path d="M 155 95 C 145 70, 165 50, 170 50 C 175 50, 180 70, 155 95 Z" fill="#52b788" />
+
+                    <!-- Waving Arms -->
+                    <path d="M 45 140 Q 25 130 20 145" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round" fill="none" class="animate-wave" />
+                    <path d="M 255 140 Q 275 140 280 155" stroke="#e2e8f0" stroke-width="10" stroke-linecap="round" fill="none" />
+                </svg>
+            </div>
+
+            <!-- Title & Subtitle -->
+            <div class="max-w-xl mx-auto space-y-3">
+                <span class="inline-block bg-emerald-100 text-emerald-800 text-xs sm:text-sm font-bold px-3.5 py-1 rounded-full border border-emerald-300 shadow-sm">
+                    🎙️ Tugasan Pemahaman & Rakaman Lisan
+                </span>
+                <h2 class="font-fredoka text-3xl sm:text-4xl md:text-5xl font-extrabold text-emerald-950 tracking-tight leading-tight">
+                    Kembara Kuih Tepung Pelita
+                </h2>
+                <p class="text-slate-600 text-sm sm:text-base leading-relaxed px-4">
+                    Tekan bentuk-bentuk bertema di dalam untuk membuka 5 soalan. Rakam jawapan lisan anda dan muat naik ke Padlet setelah selesai!
+                </p>
+            </div>
+
+            <!-- Start Button -->
+            <div class="mt-8">
+                <button onclick="goToQuizScreen()" class="group relative inline-flex items-center justify-center px-9 py-4 text-lg font-bold font-fredoka text-white bg-gradient-to-r from-emerald-600 to-teal-600 rounded-2xl shadow-xl hover:from-emerald-500 hover:to-teal-500 hover:scale-105 active:scale-95 transition-all duration-200 border-b-4 border-emerald-800">
+                    <span>Jom Mula!</span>
+                    <i class="fa-solid fa-arrow-right ml-3 group-hover:translate-x-1.5 transition-transform"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 2: QUESTION STAGE ================= -->
+        <section id="quizScreen" class="hidden flex-col items-center justify-center">
+
+            <!-- Instruction Banner -->
+            <div class="w-full bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-emerald-100 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-700 rounded-xl flex items-center justify-center text-xl shrink-0">
+                        <i class="fa-solid fa-hand-pointer"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-fredoka font-bold text-slate-800 text-base sm:text-lg">Pilih Bentuk Elemen Kuih Pelita</h3>
+                        <p class="text-xs sm:text-sm text-slate-500">Buka kelima-lima bentuk untuk membaca soalan & merakam jawapan.</p>
+                    </div>
+                </div>
+
+                <!-- Progress Dots -->
+                <div class="flex items-center space-x-1.5" id="dotsContainer">
+                    <div class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300" id="dot-1"></div>
+                    <div class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300" id="dot-2"></div>
+                    <div class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300" id="dot-3"></div>
+                    <div class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300" id="dot-4"></div>
+                    <div class="w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300" id="dot-5"></div>
+                </div>
+            </div>
+
+            <!-- 5 Shapes Grid -->
+            <div id="shapesGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full mb-8">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <!-- Finish Button Container -->
+            <div class="w-full flex flex-col items-center justify-center pt-2">
+                <button id="finishBtn" disabled onclick="goToCompletionScreen()" class="w-full sm:w-auto px-10 py-4 font-fredoka text-lg font-bold rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center space-x-2 bg-slate-300 text-slate-500 cursor-not-allowed border-b-4 border-slate-400">
+                    <i class="fa-solid fa-flag-checkered text-xl"></i>
+                    <span>Selesai!</span>
+                </button>
+                <p id="finishHint" class="text-xs text-amber-700 font-medium mt-2.5 flex items-center">
+                    <i class="fa-solid fa-lock mr-1.5"></i> Buka dan baca 5/5 soalan terlebih dahulu untuk mengaktifkan butang "Selesai!"
+                </p>
+            </div>
+        </section>
+
+        <!-- ================= SCREEN 3: COMPLETION & PADLET STAGE ================= -->
+        <section id="completionScreen" class="hidden flex-col items-center justify-center text-center py-4">
+            <!-- Mascot Dialogue Card -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border-2 border-emerald-200 w-full max-w-2xl relative mb-8">
+                <div class="flex flex-col sm:flex-row items-center gap-5 text-left">
+                    <div class="w-24 h-24 shrink-0 bg-emerald-50 rounded-2xl p-2 border-2 border-emerald-300 flex items-center justify-center shadow-inner">
+                        <span class="text-6xl animate-bounce">🍮</span>
+                    </div>
+                    <div class="w-full">
+                        <div class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full mb-2">
+                            Mesej Maskot Kuih Pelita 🍃
+                        </div>
+                        <h3 class="font-fredoka text-2xl font-bold text-slate-800 mb-1">Syabas & Tahniah! 🎉</h3>
+                        
+                        <!-- Requested Dialogue Text -->
+                        <p class="text-slate-800 text-base sm:text-lg font-bold leading-relaxed bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300 mt-2 text-emerald-950 shadow-sm">
+                            "Jangan lupa muat naik rakaman anda di Padlet yang disediakan di bawah!"
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Padlet Section -->
+            <div class="w-full bg-white rounded-3xl p-6 shadow-md border border-slate-200">
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-4 gap-3">
+                    <div class="flex items-center space-x-3 text-left">
+                        <div class="w-10 h-10 bg-amber-100 text-amber-700 rounded-xl flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-solid fa-cloud-arrow-up"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-fredoka font-bold text-slate-800 text-lg">Ruang Muat Naik Padlet Murid</h4>
+                            <p class="text-xs text-slate-500">Muat naik fail rakaman jawapan lisan audio anda di bawah.</p>
+                        </div>
+                    </div>
+
+                    <!-- Direct Open Padlet Link Button -->
+                    <a href="https://padlet.com/gipgp251409954/muat-naik-rakaman-audio-anda-di-sini-s024wi979wxzabbv9t4c" 
+                       target="_blank" 
+                       rel="noopener noreferrer" 
+                       class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-fredoka text-sm font-bold rounded-xl shadow-md transition-all hover:scale-105 active:scale-95 flex items-center space-x-2 shrink-0 border-b-2 border-emerald-800">
+                        <span>Buka Padlet (Tab Baharu)</span>
+                        <i class="fa-solid fa-up-right-from-square text-xs"></i>
+                    </a>
+                </div>
+
+                <!-- Padlet Embed Frame -->
+                <div class="relative w-full rounded-2xl overflow-hidden bg-slate-100 border-2 border-slate-200 shadow-inner h-[500px]">
+                    <iframe 
+                        src="https://padlet.com/embed/gipgp251409954/muat-naik-rakaman-audio-anda-di-sini-s024wi979wxzabbv9t4c" 
+                        frameborder="0" 
+                        allow="camera; microphone; geolocation" 
+                        class="w-full h-full rounded-2xl"
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+
+            <!-- Restart Button -->
+            <button onclick="resetApp()" class="mt-8 text-sm font-bold text-slate-500 hover:text-emerald-700 transition-colors flex items-center space-x-2 px-4 py-2 rounded-xl hover:bg-slate-200">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Mula Semula Aktiviti</span>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- QUESTION MODAL (NO MULTIPLE CHOICE OPTIONS) -->
+    <div id="questionModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border-4 border-emerald-400 transform transition-all animate-in fade-in zoom-in-95 duration-200 relative">
+
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 w-9 h-9 bg-slate-100 hover:bg-slate-200 rounded-full flex items-center justify-center transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Header -->
+            <div class="flex items-center space-x-3 mb-5">
+                <div id="modalIconContainer" class="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-inner">
+                    <!-- Icon injected dynamically -->
+                </div>
+                <div>
+                    <span id="modalCategory" class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md">
+                        Soalan 1
+                    </span>
+                    <h3 id="modalTitle" class="font-fredoka font-bold text-slate-800 text-lg">
+                        Bentuk Elemen
+                    </h3>
+                </div>
+            </div>
+
+            <!-- Question Card Display -->
+            <div class="bg-slate-50 rounded-2xl p-6 border-2 border-slate-200 mb-6 text-center">
+                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest block mb-2">Tugasan Lisan / Soalan:</span>
+                <p id="modalQuestionText" class="text-lg sm:text-xl font-bold text-slate-800 leading-relaxed">
+                    <!-- Question text injected here -->
+                </p>
+            </div>
+
+            <!-- Student Hint -->
+            <div class="bg-amber-50 rounded-xl p-3 border border-amber-200 text-amber-800 text-xs flex items-center space-x-2.5 mb-6">
+                <i class="fa-solid fa-lightbulb text-amber-500 text-base shrink-0"></i>
+                <span>Sila baca dan rakam jawapan lisan anda untuk soalan di atas.</span>
+            </div>
+
+            <!-- Mark Completed Button -->
+            <button onclick="markQuestionAsCompleted()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-fredoka font-bold text-base rounded-2xl shadow-md transition-all flex items-center justify-center space-x-2 border-b-4 border-emerald-800 active:scale-95">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Selesai Baca & Rekod</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-slate-100 border-t border-slate-200 py-4 text-center text-xs text-slate-500">
+        <p>© Modul Interaktif Bahasa Melayu - Resepi Kuih Tepung Pelita</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Exact 5 questions provided in exact order
+        const questionsData = [
+            {
+                id: 1,
+                shapeName: "Daun Pandan",
+                icon: "fa-leaf",
+                bgColor: "bg-emerald-100",
+                textColor: "text-emerald-700",
+                borderColor: "border-emerald-300",
+                question: "Apakah kuih tradisional yang diterangkan dalam audio tadi?"
+            },
+            {
+                id: 2,
+                shapeName: "Santan Putih",
+                icon: "fa-droplet",
+                bgColor: "bg-teal-100",
+                textColor: "text-teal-700",
+                borderColor: "border-teal-300",
+                question: "Apakah dua lapisan yang terdapat pada Kuih Tepung Pelita?"
+            },
+            {
+                id: 3,
+                shapeName: "Pandan Hijau",
+                icon: "fa-cubes-stacked",
+                bgColor: "bg-green-100",
+                textColor: "text-green-700",
+                borderColor: "border-green-300",
+                question: "Berapakah helai daun pandan yang diperlukan untuk menyediakan lapisan bawah?"
+            },
+            {
+                id: 4,
+                shapeName: "Sampan Daun Pisang",
+                icon: "fa-fire-burner",
+                bgColor: "bg-lime-100",
+                textColor: "text-lime-800",
+                borderColor: "border-lime-300",
+                question: "Mengapakah adunan pandan perlu dikacau secara berterusan semasa dimasak?"
+            },
+            {
+                id: 5,
+                shapeName: "Gula Pasir",
+                icon: "fa-star",
+                bgColor: "bg-amber-100",
+                textColor: "text-amber-700",
+                borderColor: "border-amber-300",
+                question: "Apakah langkah terakhir yang perlu dilakukan sebelum Kuih Tepung Pelita dihidangkan?"
+            }
+        ];
+
+        // State variables
+        let completedQuestions = new Set();
+        let activeQuestionId = null;
+
+        // Init
+        window.onload = function() {
+            renderShapes();
+        };
+
+        // Switch Screen 1 -> Screen 2
+        function goToQuizScreen() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('flex');
+
+            document.getElementById('quizScreen').classList.remove('hidden');
+            document.getElementById('quizScreen').classList.add('flex');
+
+            document.getElementById('progressBadge').classList.remove('hidden');
+            updateProgressUI();
+        }
+
+        // Render Shapes
+        function renderShapes() {
+            const gridContainer = document.getElementById('shapesGrid');
+            gridContainer.innerHTML = '';
+
+            questionsData.forEach((item, index) => {
+                const isDone = completedQuestions.has(item.id);
+
+                const card = document.createElement('div');
+                card.className = `relative cursor-pointer group flex flex-col items-center justify-between p-5 rounded-3xl border-2 transition-all duration-300 hover:scale-105 ${
+                    isDone 
+                        ? 'bg-slate-100 border-emerald-400 opacity-90' 
+                        : `${item.bgColor} ${item.borderColor} shadow-md animate-shape-float`
+                }`;
+                card.onclick = () => openQuestionModal(item.id);
+
+                card.innerHTML = `
+                    <div class="w-full flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${isDone ? 'bg-emerald-600 text-white' : 'bg-white/80 text-slate-700'}">
+                            Soalan ${index + 1}
+                        </span>
+                        ${isDone ? '<i class="fa-solid fa-circle-check text-emerald-600 text-base"></i>' : '<i class="fa-regular fa-circle text-slate-400 text-xs"></i>'}
+                    </div>
+
+                    <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/90 shadow-sm flex items-center justify-center mb-3 group-hover:rotate-6 transition-transform">
+                        <i class="fa-solid ${item.icon} text-3xl sm:text-4xl ${item.textColor}"></i>
+                    </div>
+
+                    <div class="text-center">
+                        <h4 class="font-fredoka font-bold text-xs sm:text-sm text-slate-800 leading-tight">
+                            ${item.shapeName}
+                        </h4>
+                        <span class="text-[11px] font-semibold text-slate-500 block mt-1">
+                            ${isDone ? '✅ Selesai' : 'Tekan Soalan'}
+                        </span>
+                    </div>
+                `;
+
+                gridContainer.appendChild(card);
+            });
+        }
+
+        // Open Modal displaying Question
+        function openQuestionModal(qId) {
+            const qData = questionsData.find(q => q.id === qId);
+            if (!qData) return;
+
+            activeQuestionId = qId;
+
+            document.getElementById('modalCategory').innerText = `Soalan ${qData.id} dari 5`;
+            document.getElementById('modalTitle').innerText = qData.shapeName;
+            document.getElementById('modalQuestionText').innerText = qData.question;
+
+            const iconBox = document.getElementById('modalIconContainer');
+            iconBox.className = `w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${qData.bgColor} ${qData.textColor}`;
+            iconBox.innerHTML = `<i class="fa-solid ${qData.icon}"></i>`;
+
+            document.getElementById('questionModal').classList.remove('hidden');
+        }
+
+        // Action when student clicks "Selesai Baca & Rekod"
+        function markQuestionAsCompleted() {
+            if (activeQuestionId !== null) {
+                completedQuestions.add(activeQuestionId);
+                updateProgressUI();
+                renderShapes();
+                triggerTinyConfetti();
+            }
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').classList.add('hidden');
+        }
+
+        // Update Progress UI & Button Locking State
+        function updateProgressUI() {
+            const count = completedQuestions.size;
+            document.getElementById('progressText').innerText = `Soalan Dibaca: ${count}/5`;
+
+            // Dots
+            for (let i = 1; i <= 5; i++) {
+                const dot = document.getElementById(`dot-${i}`);
+                if (completedQuestions.has(i)) {
+                    dot.className = "w-3.5 h-3.5 rounded-full bg-emerald-500 border border-emerald-600 shadow-sm";
+                } else {
+                    dot.className = "w-3.5 h-3.5 rounded-full bg-slate-200 border border-slate-300";
+                }
+            }
+
+            // Unlock Finish Button when count === 5
+            const finishBtn = document.getElementById('finishBtn');
+            const finishHint = document.getElementById('finishHint');
+
+            if (count === 5) {
+                finishBtn.disabled = false;
+                finishBtn.className = "w-full sm:w-auto px-10 py-4 font-fredoka text-lg font-bold rounded-2xl shadow-xl transition-all duration-300 flex items-center justify-center space-x-2 bg-gradient-to-r from-amber-500 to-emerald-600 text-white hover:from-amber-400 hover:to-emerald-500 hover:scale-105 active:scale-95 border-b-4 border-emerald-900 animate-bounce cursor-pointer";
+                finishHint.className = "text-xs text-emerald-800 font-bold mt-2.5 flex items-center";
+                finishHint.innerHTML = '<i class="fa-solid fa-lock-open mr-1.5 text-emerald-600"></i> Syabas! Kelima-lima soalan telah dibaca. Tekan "Selesai!" sekarang!';
+            }
+        }
+
+        // Switch Screen 2 -> Screen 3
+        function goToCompletionScreen() {
+            if (completedQuestions.size < 5) return;
+
+            document.getElementById('quizScreen').classList.add('hidden');
+            document.getElementById('quizScreen').classList.remove('flex');
+
+            document.getElementById('completionScreen').classList.remove('hidden');
+            document.getElementById('completionScreen').classList.add('flex');
+
+            fireGrandConfetti();
+        }
+
+        // Reset App
+        function resetApp() {
+            completedQuestions.clear();
+            updateProgressUI();
+            renderShapes();
+
+            document.getElementById('completionScreen').classList.add('hidden');
+            document.getElementById('completionScreen').classList.remove('flex');
+
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            document.getElementById('welcomeScreen').classList.add('flex');
+
+            document.getElementById('progressBadge').classList.add('hidden');
+        }
+
+        function triggerTinyConfetti() {
+            try {
+                confetti({
+                    particleCount: 20,
+                    spread: 40,
+                    origin: { y: 0.7 }
+                });
+            } catch (e) {}
+        }
+
+        function fireGrandConfetti() {
+            try {
+                const duration = 3 * 1000;
+                const end = Date.now() + duration;
+
+                (function frame() {
+                    confetti({
+                        particleCount: 6,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 },
+                        colors: ['#2d5a27', '#52b788', '#ffffff', '#f59e0b']
+                    });
+                    confetti({
+                        particleCount: 6,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 },
+                        colors: ['#2d5a27', '#52b788', '#ffffff', '#f59e0b']
+                    });
+
+                    if (Date.now() < end) {
+                        requestAnimationFrame(frame);
+                    }
+                })();
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
